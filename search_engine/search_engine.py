@@ -81,6 +81,9 @@ class BOWInvertedIndexEngine(SearchEngineBase):
         query_words = list(self.parse_text_to_words(query))
         query_words_index = list()
         for query_word in query_words:
+            query_words_index.append(0)
+
+        for query_word in query_words:
             if query_word not in self.inverted_index:
                 return []
         
@@ -103,7 +106,7 @@ class BOWInvertedIndexEngine(SearchEngineBase):
                 continue
 
             min_val = min(current_ids)
-            min_val_pos = current_ids.insert(min_val)
+            min_val_pos = current_ids.index(min_val)
             query_words_index[min_val_pos] += 1
 
     @staticmethod
@@ -113,7 +116,7 @@ class BOWInvertedIndexEngine(SearchEngineBase):
         word_list = text.split(" ")
         word_list = filter(None, word_list)
         return set(word_list)
-        
+
 # %%%%% test code
 def main(search_engine):
     for file_path in [
@@ -133,5 +136,5 @@ def main(search_engine):
             print(result)
 
 
-search_engine = BOWEngine()
+search_engine = BOWInvertedIndexEngine()
 main(search_engine)
