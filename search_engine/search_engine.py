@@ -1,3 +1,7 @@
+# %%%%% import
+import re
+
+# %%%%% class
 class SearchEngineBase(object):
     def __init__(self):
         pass
@@ -30,6 +34,39 @@ class SimpleEngine(SearchEngineBase):
         return results
 
 
+class BOWEngine(SearchEngineBase):
+    def __init__(self):
+        super(BOWEngine, self).__init__()
+        self.__id_to_words = {}
+
+    def process_corpus(self, id, text):
+        self.__id_to_words[id] = self.parse_text_to_words(text)
+
+    def search(self, query):
+        query_words = self.parse_text_to_words(query)
+        results = []
+        for id, words in self.__id_to_words.items():
+            if self.qeury_match(query_words, words):
+                results.append(id)
+        return results
+
+    @staticmethod
+    def query_match(query_words, words):
+        for word in query_words:
+            if not word in words:
+                return False
+        return True
+
+    @staticmethod
+    def parse_text_to_words(text):
+        text = re.sub(r"[^\w]", " ", text)
+        text = text.lower()
+        word_list = text.split(" ")
+        word_list = filter(None, word_list)
+        return set(word_list)
+
+
+# %%%%% test code
 def main(search_engine):
     for file_path in [
         "./corpus/1.txt",
