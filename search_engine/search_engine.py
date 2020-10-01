@@ -1,4 +1,4 @@
-class searchEngineBase(object):
+class SearchEngineBase(object):
     def __init__(self):
         pass
 
@@ -12,6 +12,21 @@ class searchEngineBase(object):
 
     def search(self, query):
         raise Exception('search not implemented')
+
+class SimpleEngine(SearchEngineBase):
+    def __init__(self):
+        super(SimpleEngine, self).__init__()
+        self.__id_to_texts = {}
+    
+    def process_corpus(self, id, text):
+        self.__id_to_texts[id] = text
+
+    def search(self, query):
+        results = []
+        for id, text in self.__id_to_texts.items():
+            if query in text:
+                results.append(id)
+        return results
 
 def main(search_engine):
     for file_path in ['1.txt', '2.txt', '3.txt', '4.txt', '5.txt']:
